@@ -10,6 +10,7 @@ import { TestingComponent } from './testing/testing.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Router, NavigationExtras } from '@angular/router';
 
 
 @NgModule({

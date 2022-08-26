@@ -31,9 +31,9 @@ app.all("/*", function(req, res, next){
     next();
   });
 
-let ksu = {username : 'k@s', pwd: '1', userid: '', userbirthdate: '', userage: ''};
-let Ntl = {username : 'n@t',userid: '', pwd: '2' , userbirthdate: '', userage: ''};
-let Abn = {username : 'a@b', pwd: '3', userid: '', userbirthdate: '', userage: ''};
+let ksu = {username : 'k@s', pwd: '1', userid: '1', userbirthdate: '1900', userage: '122'};
+let Ntl = {username : 'n@t', pwd: '2', userid: '2' , userbirthdate: '', userage: ''};
+let Abn = {username : 'a@b', pwd: '3', userid: '3', userbirthdate: '', userage: ''};
 
 app.post('/ping', function (req, res) {
     console.log("hello", req.body)
@@ -41,11 +41,11 @@ app.post('/ping', function (req, res) {
     authcheck = false;
 
     if(isHeroEqual(ksu, req.body)===true){
-        Sendinfo(isHeroEqual(ksu, req.body));
+        Sendinfo(isHeroEqual(ksu, req.body), ksu);
     }else if(isHeroEqual(Ntl, req.body)===true){
-        Sendinfo(isHeroEqual(Ntl, req.body));
+        Sendinfo(isHeroEqual(Ntl, req.body), Ntl);
     }else if(isHeroEqual(Abn, req.body)===true){
-        Sendinfo(isHeroEqual(Abn, req.body));
+        Sendinfo(isHeroEqual(Abn, req.body), Abn);
     }else{
         Sendinfo(false);
     }
@@ -61,10 +61,11 @@ app.post('/ping', function (req, res) {
         }
       }
     
-    function Sendinfo(authchecker){
+    function Sendinfo(authchecker, object1){
         if (authchecker=== true){
             state = true;
-            res.send(state);
+            res.send(object1);
+            console.log("This is two: ", object1);
             console.log(state);
         }else{
             state = false;

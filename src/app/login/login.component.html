@@ -1,46 +1,31 @@
-
-<h1>Login Form! </h1>
-
 <!-- 
-<form>
-username by email: <br>
-<input type="email" [(ngModel)]="username"> <br>
-User password: <br>
-<input type="password" [(ngModel)]="pwd"> <br>
-Birthdate: <br>
-<input type="date" [(ngModel)]="userbirthdate"> <br>
-Age: <br> -->
-<!-- <input type="number" [(ngModel)]="userage"> <br>
 
-</form> 
-
-
-<button class="log_but" value="Login" id="login"(click)="loginfunc()">Login</button> -->
-
-<!--  onSubmit() -->
+ <h2 style="color:red">{{errormes}}</h2>
 <form [formGroup]="profileForm" (ngSubmit)="callServer()">
 
   <label for="first-name">Username: </label>
   <input id="username" type="text" formControlName="username"><br>
 
-  <label for="last-name">Userid: </label>
-  <input id="userid" type="text" formControlName="userid"><br>
-
   <label for="last-name">Password: </label>
   <input id="pwd" type="text" formControlName="pwd"><br>
 
-  <label for="last-name">Birth Date: </label>
-  <input id="userbirthdate" type="text" formControlName="userbirthdate"><br>
-
-  <label for="last-name">User Age: </label>
-  <input id="userage" type="text" formControlName="userage"><br>
    <button type="submit">Here</button>
-</form>
+</form> -->
 
+<div class="login-box">
+  <h2 style="color:gainsboro;">Login</h2>
+  <form [formGroup]="profileForm" (ngSubmit)="callServer()">
+    <div class="user-box">
+      <input id="username" type="text" formControlName="username"><br>
+      <label>Username</label>
+    </div>
+    <div class="user-box">
+      <input id="pwd" type="text" formControlName="pwd"><br>
+      <label>Password</label>
+    </div>
+    <button type="submit">Login</button>
 
-<!-- // username = "";
-// userid = "";
-// pwd = "";
-// userbirthdate = "";
-// userage = ""; -->
+  </form>
+</div>
+
 

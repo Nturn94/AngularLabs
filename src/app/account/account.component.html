@@ -1,8 +1,42 @@
-<p>account works!</p>
+
+
+<!-- <p>account works!</p> -->
 
 
 
-<h1> Hello Account User!</h1>
+<h1 style="color:gainsboro;"> Hello Account User!</h1>
 
 
-<img src="assets/small.jpg" alt="Bird">
+<!-- 
+<img src="assets/small.jpg" alt="Bird"> -->
+
+<p style="text-align:center; margin-top: -20px;">Username: {{sessionStorage.getItem('username')}}</p>
+<p style="text-align:center;">userid: {{sessionStorage.getItem('userid')}}</p>
+<p style="text-align:center;">Birthdate: {{sessionStorage.getItem('userbirthdate')}}</p>
+<p style="text-align:center;">Age: {{sessionStorage.getItem('userage')}}</p>
+
+
+<div class="login-box">
+    <h2>Update details</h2>
+    <form>
+      <div class="user-box">
+        <input type="text" name="username" value="{{sessionStorage.getItem('username')}}" #username>
+        <label>Username</label>
+      </div>
+      <div class="user-box">
+        <input type="text" name="id"  value="{{sessionStorage.getItem('userid')}}" #id>
+        <label>user id</label>
+      </div>
+      <div class="user-box">
+        <input type="text" name="date"  value="{{sessionStorage.getItem('userbirthdate')}}" #date>
+        <label>Birth Date</label>
+      </div>
+      <div class="user-box">
+        <input type="text" name="age"  value="{{sessionStorage.getItem('userage')}}" #age>
+        <label>Age</label>
+      </div>
+      <button type="button" (click)="clickme(username.value, id.value, date.value, age.value)">Submit</button> <button type="button" (click)="dontclickme()" style="margin-left: 200px;">Logout</button>
+    </form>
+
+    
+  </div>
