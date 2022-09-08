@@ -1,6 +1,15 @@
-<h2 style="color:white;">Assign User to Group</h2><br>
-<div style="display: inline;">
-    <form id="assignform">
+<H1 style="color:white;">User Control Page</H1>
+<button style="" class="btn btn-primary" (click)="togglediv1()">Assign Users to groups</button>
+<div class="divider"></div>
+<button class="btn btn-primary" (click)="togglediv2()">Manage Groups</button>
+<div class="divider"></div>
+<button class="btn btn-primary" (click)="togglediv3()">Manage Users</button>
+<div class="divider"></div>
+<button class="btn btn-primary" (click)="togglediv4()">Manage Channels</button>
+
+<div id="div1" style="display: inline;" *ngIf="isdiv1">
+    <h2 style="color:white;">Assign User to Group</h2><br>
+    <form id="form1">
         <select [(ngModel)] = "userlist" name="userlist">
             <option [ngValue] = "null">Select User</option>
             <option style="color:black;" *ngFor="let user of users">{{user}}</option>
@@ -12,14 +21,74 @@
         </select><br><br>
         </div>
         <button (click)="AssignUser()" class ="btn btn-primary"> Apply User to room</button>
-
-
-
     </form>
 </div>
 <br><br>
-<h2 style="color:white;">Create new room</h2><br>
-<form>
-    <input type="text" [(ngModel)] = "newroomname" name="newroomname" value=""><br><br>
-    <button (click)="PostNewGroup()" class ="btn btn-primary"> Create room</button>
-</form>
+
+<!-- Groups-->
+<div id="div2" *ngIf="isdiv2">
+    <h2 style="color:white;">Create new Group</h2><br>
+    <form id="form2">
+        <input type="text" [(ngModel)] = "newroomname" name="newroomname" value=""><br><br>
+        <button (click)="PostNewGroup()" class ="btn btn-primary"> Create room</button>
+    </form>
+    <h3  style="color:white;">Delete Group</h3>
+    <form>
+        <select [(ngModel)] = "grouplist" name="grouplist">
+            <option [ngValue] = "null">Delete Group</option>
+            <option style="color:black;" *ngFor="let group of groups">{{group}}</option>
+        </select><br>
+        <button (click)="delgroup()" class ="btn btn-primary">Delete Group</button>
+    </form>
+</div>
+
+
+<!--USERS-->
+
+<div id="div3" *ngIf="isdiv3">
+    <h2 style="color:white;">Create User</h2><br> 
+    <form id="form3">
+        <span style="color: white;">Username:  </span><input type="text" [(ngModel)] = "newusername" name="newusername" value=""><br>
+        <span style="color: white;">Password: </span><input type="text" [(ngModel)] = "newuserpwd" name="newuserpwd" value=""><br><br>
+        <button (click)="PostNewUser()" class ="btn btn-primary"> Create User</button>
+    </form>
+
+    <h2 style="color:white;">Delete User</h2><br>
+    <form>
+        <select [(ngModel)] = "delusersel" name="delusersel">
+            <option [ngValue] = "null">Select User</option>
+            <option style="color:black;" *ngFor="let user of users">{{user}}</option>
+        </select><br>
+        <button (click)="DelUser()" class ="btn btn-primary"> Delete User</button>
+    </form>
+</div>
+
+<div id="div4" *ngIf="isdiv4">
+    <h2 style="color:white;">Assign User to Channel</h2><br>
+    <form id="form1">
+        <select [(ngModel)] = "userlist" name="userlist">
+            <option [ngValue] = "null">Select User</option>
+            <option style="color:black;" *ngFor="let user of users">{{user}}</option>
+        </select>
+        <div  style="display: inline; padding:20px;">
+        <select [(ngModel)] = "channellist" name="channellist">
+            <option [ngValue] = "null">Select Channel</option>
+            <option style="color:black;" *ngFor="let channel of channels">{{channel}}</option>
+        </select><br><br>
+        </div>
+        <button (click)="AssignUserToChannel()" class ="btn btn-primary"> Apply User to channel</button>
+    </form>
+    <h2 style="color:white;">Create new Channel</h2><br>
+    <form id="form2">
+        <input type="text" [(ngModel)] = "newchannelname" name="newchannelname" value=""><br><br>
+        <button (click)="PostNewChannel()" class ="btn btn-primary"> Create channel</button>
+    </form>
+    <h3  style="color:white;">Delete Channel</h3>
+    <form>
+        <select [(ngModel)] = "channellist" name="channellist">
+            <option [ngValue] = "null">Delete channel</option>
+            <option style="color:black;" *ngFor="let channel of channels">{{channel}}</option>
+        </select><br>
+        <button (click)="delChannel()" class ="btn btn-primary">Delete channel</button>
+    </form>
+</div>

@@ -16,3 +16,8 @@ select {
 select::-ms-expand {
   display: none;
 }
+
+.divider{
+  width:15px;
+  display:inline-block;
+}
