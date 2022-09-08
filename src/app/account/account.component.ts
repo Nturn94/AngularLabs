@@ -13,6 +13,12 @@ import { FormsModule } from '@angular/forms';
 export class AccountComponent implements OnInit {
   public sessionStorage = sessionStorage;
 
+  
+  user:String|null = sessionStorage.getItem('username');
+  id:String|null  = sessionStorage.getItem('userid');
+  birth:String|null  = sessionStorage.getItem('userbirthdate');
+  age:String|null  = sessionStorage.getItem('userage');
+
   clickme(username:string, id:string, date:string, age:string){
     sessionStorage.setItem('username', username);
     sessionStorage.setItem('userid', id);
@@ -38,10 +44,6 @@ export class AccountComponent implements OnInit {
 
   ngOnInit(): void {
 
-    var user = sessionStorage.getItem('username');
-    var id = sessionStorage.getItem('userid');
-    var birth = sessionStorage.getItem('userbirthdate');
-    var age = sessionStorage.getItem('userage');
 
 
 

@@ -11,6 +11,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router, NavigationExtras } from '@angular/router';
+import { ChatComponent } from './chat/chat.component';
+import { CommonModule } from '@angular/common';
+import { SocketService } from './services/socket.service';
+import { MSPComponent } from './msp/msp.component';
 
 
 @NgModule({
@@ -18,7 +22,9 @@ import { Router, NavigationExtras } from '@angular/router';
     AppComponent,
     AccountComponent,
     LoginComponent,
-    TestingComponent
+    TestingComponent,
+    ChatComponent,
+    MSPComponent
     // RootComponent,
     
 
@@ -32,11 +38,14 @@ import { Router, NavigationExtras } from '@angular/router';
       {path: 'account', component: AccountComponent},
       {path: 'login', component: LoginComponent},
       {path: 'testing', component: TestingComponent},
+      {path: 'chat', component: ChatComponent},
+      {path: 'msp', component: MSPComponent},
     ]),
     ReactiveFormsModule,
+    CommonModule,
 
   ],
-  providers: [],
+  providers: [SocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,25 +1,34 @@
 var express = require('express');
 var app = express();
-// var http = require("http").Server(app);
+// var bodyParser = require("body-parser");
 
-// let server = http.listen(3000, function () {
-//     let host = server.address().address;
-//     let port = server.address().port;
-//     console.log("My First Nodejs Server!");
-//     console.log("Server listening on: "+ host + " port:" + port);
-//});
-
-// var bodyParser = require('body-parser');
 
 var cors = require('cors');
-app.use(cors());
 
-// app.use (bodyParser.json());
+const http = require('http').Server(app);
+const io = require('socket.io')(http,{
+    cors: {
+        origin: "http://localhost:4200",
+        methods: ["GET", "POST"],
+    }
+})
+const sockets = require('./socket.js');
+const server = require('./listen.js');
+const PORT = 3000;
+app.use(cors());
+sockets.connect(io, PORT);
+server.listen(http, PORT);
+
+
+
+
+
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
 
 const path = require('path');
+const { SystemJsNgModuleLoader } = require('@angular/core');
 
 
 app.use(express.static(__dirname + "../dist/week4/"));
@@ -31,9 +40,12 @@ app.all("/*", function(req, res, next){
     next();
   });
 
-let ksu = {username : 'k@s', pwd: '1', userid: '1', userbirthdate: '1900', userage: '122'};
-let Ntl = {username : 'n@t', pwd: '2', userid: '2' , userbirthdate: '', userage: ''};
-let Abn = {username : 'a@b', pwd: '3', userid: '3', userbirthdate: '', userage: ''};
+let ksu = {username : 'k@s', pwd: '1', userid: '1', userbirthdate: '1900', userage: '122', groups: ["groupa"]};
+let Ntl = {username : 'n@t', pwd: '2', userid: '2' , userbirthdate: '', userage: '', groups: ["groupa"]};
+let Abn = {username : 'a@b', pwd: '3', userid: '3', userbirthdate: '', userage: '', groups: ["groupa", "groupc"]};
+
+let groups = ["groupa", "groupb", "groupc"];
+let users = [ksu, Ntl, Abn];
 
 app.post('/ping', function (req, res) {
     console.log("hello", req.body)
@@ -75,12 +87,66 @@ app.post('/ping', function (req, res) {
 
   })
 
-app.listen(3000,()=>{
-    var d = new Date();
-    var n = d.getHours();
-    var m = d.getMinutes();
-    console.log("server has been started at : "+n+":"+m);
+app.post('/newgroup', async (req, res) =>{
+    // console.log("hello", req.body)
+
+    console.log("hello");
+    res.status(200).json("data");
+    
+
 });
+
+app.get("/rtv", function (req, res) {
+    res.status(200).json({groups: groups, users: users });
+});
+
+app.post('/assign', async (req, res) =>{
+    console.log(req.body);
+    const myArray = req.body.split(" ");
+
+    if(CheckEqual(ksu, myArray[1])===true){
+        if (this.ksu.groups.indexOf(myArray[0])===-1){
+            this.ksu.groups.push(myArray[0]);
+            console.log("User added to group!");
+        }
+    }else if(CheckEqual(Ntl, myArray[1])===true){
+        if (this.Ntl.groups.indexOf(myArray[0])===-1){
+            this.Ntl.groups.push(myArray[0]);
+            console.log("User added to group!");
+        }
+    }else if(CheckEqual(Abn, myArray[1])===true){
+        if (this.Abn.groups.indexOf(myArray[0])===-1){
+            this.Abn.groups.push(myArray[0]);
+            console.log("User added to group!");
+        }
+
+    }
+
+    function CheckEqual(object1, object2) {
+        if(object1.username === object2){
+            authcheck = true;
+            return(authcheck);
+        }
+    }
+
+    //group, user
+
+});
+
+
+// res.send({data: dataChunk, results: results[1]});
+
+// app.get("/rtv", function (req, res) {
+//     res.status(200).json({ status: "UP" });
+// });
+// _________________________________________________
+
+// app.listen(3000,()=>{
+//     var d = new Date();
+//     var n = d.getHours();
+//     var m = d.getMinutes();
+//     console.log("server has been started at : "+n+":"+m);
+// });
 
 
 

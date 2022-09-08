@@ -1,0 +1,25 @@
+<h2 style="color:white;">Assign User to Group</h2><br>
+<div style="display: inline;">
+    <form id="assignform">
+        <select [(ngModel)] = "userlist" name="userlist">
+            <option [ngValue] = "null">Select User</option>
+            <option style="color:black;" *ngFor="let user of users">{{user}}</option>
+        </select>
+        <div  style="display: inline; padding:20px;">
+        <select [(ngModel)] = "grouplist" name="grouplist">
+            <option [ngValue] = "null">Select Group</option>
+            <option style="color:black;" *ngFor="let group of groups">{{group}}</option>
+        </select><br><br>
+        </div>
+        <button (click)="AssignUser()" class ="btn btn-primary"> Apply User to room</button>
+
+
+
+    </form>
+</div>
+<br><br>
+<h2 style="color:white;">Create new room</h2><br>
+<form>
+    <input type="text" [(ngModel)] = "newroomname" name="newroomname" value=""><br><br>
+    <button (click)="PostNewGroup()" class ="btn btn-primary"> Create room</button>
+</form>
