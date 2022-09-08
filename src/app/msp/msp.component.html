@@ -20,7 +20,7 @@
             <option style="color:black;" *ngFor="let group of groups">{{group}}</option>
         </select><br><br>
         </div>
-        <button (click)="AssignUser()" class ="btn btn-primary"> Apply User to room</button>
+        <button (click)="AssignUser()" class ="btn btn-primary"> Apply User to group</button>
     </form>
 </div>
 <br><br>
@@ -85,7 +85,7 @@
     </form>
     <h3  style="color:white;">Delete Channel</h3>
     <form>
-        <select [(ngModel)] = "channellist" name="channellist">
+        <select [(ngModel)] = "delchannelsel" name="delchannelsel">
             <option [ngValue] = "null">Delete channel</option>
             <option style="color:black;" *ngFor="let channel of channels">{{channel}}</option>
         </select><br>

@@ -36,6 +36,8 @@ export class MSPComponent implements OnInit {
   channellist:string="";
   newchannelname:string="";
   channels:any =[];
+  delchannelsel:string="";
+  
   isdiv1 = false;
   isdiv2 = false;
   isdiv3 = false;
@@ -202,10 +204,33 @@ AssignUserToChannel(){
 });
 
 }
-PostNewChannel(){ //unfinished
+PostNewChannel(){
+  const headers = new HttpHeaders()
+  headers.append('Content-Type', 'application/json; charset=utf-8');
+
+
+  console.log("New channel name is:", this.newchannelname);
+
+  return this.http.post('http://127.0.0.1:3000/newchannel', JSON.stringify(this.newchannelname), {
+  headers: headers
+})    .subscribe(data => {
+  console.log(data);
+});
 
 }
-delChannel(){ //unfinished
+delChannel(){
+    
+  const headers = new HttpHeaders()
+  headers.append('Content-Type', 'application/json; charset=utf-8');
+
+
+  console.log("This channel is deleted", this.delchannelsel);
+
+  return this.http.post('http://127.0.0.1:3000/delchannel', JSON.stringify(this.delchannelsel), {
+  headers: headers
+})    .subscribe(data => {
+  console.log(data);
+});
 
 }
 
