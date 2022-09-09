@@ -17,7 +17,7 @@ The project has had many updates. The project was commited to often to store cha
 
 ### Documentation - Data structures
 There are three main data structures. Users, channels and groups. All of these structures will exist within the database eventually. At the moment Users is an object, channels and groups are arrays. Currently all structures are stored within the server.js file.
-####The user has these elements: 
+#### The user has these elements: 
 Username, userid, userbirthdate, userage, groups(memberof)[], adminstatus(yes/no), GroupAssis[], channels[] 
 There is a many groups/channels association to one user. The user can also be a super admin.
 #### The group structure is an array
