@@ -23,7 +23,7 @@ There is a many groups/channels association to one user. The user can also be a 
 #### The group structure is an array
 There is just an array that inculdes all groups. The relation to the user is stored on user.
 #### The channel structure is also an array
-There is just an array that inculdes all channels. The relation to the user is stored on user.
+There is just an array that inculdes all channels. The relation to the user is stored on user. This needs to be made into an object that also stores group ID.
 
 ### Documentation - REST API
 
