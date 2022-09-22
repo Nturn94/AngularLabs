@@ -1,9 +1,12 @@
 var express = require('express');
 var app = express();
 // var bodyParser = require("body-parser");
+var mongo = require("mongoose");
 
 
 var cors = require('cors');
+
+
 
 const http = require('http').Server(app);
 const io = require('socket.io')(http,{
@@ -22,11 +25,27 @@ server.listen(http, PORT);
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
-// app.use(bodyParser.json());
+
+var db = mongo.connect("mongodb://localhost:27017/assignment", function(err, response){
+    if(err){ console.log(err);}
+    else{
+        console.log('connected to ' + db, ' + ', response);
+    }
+});
+
+var Schema = mongo.Schema;
+var UsersSchema = new Schema({
+    email: {type: String},
+    password: {type: String},
+    Rank: {type: String},
+},{versionKey: false});
+    
+var model = mongo.model('users', UsersSchema, 'users');
 
 const path = require('path');
 const { SystemJsNgModuleLoader } = require('@angular/core');
 const { stringify } = require('querystring');
+const { addAbortSignal } = require('stream');
 
 
 app.use(express.static(__dirname + "../dist/week4/"));
@@ -37,6 +56,83 @@ app.all("/*", function(req, res, next){
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
     next();
   });
+
+// app.post("/api/SaveUser", function(req,res){
+//     var mod = new model(req.body);
+//     if(req.body.mode == "Save"){
+//         mod.save(function(err, data){
+//             if(err){
+//                 res.send(err);
+//             }else{
+//                 res.send({data:"Record has been Inserted..!!"});
+//             }
+//         });
+//     }else{
+//         model.findByIdAndUpdate(req.body.id, { email: req.body.email, password: req.body.password, Rank: req.body.Rank },
+//             function(err, data){
+//                 if (err) {
+//                     res.send(err);
+//                 }else{
+//                     res.send({data: "Record has been updated!!"});
+//                 }
+//             })
+//     }
+// }
+// )
+
+app.post("/api/SaveUser", async function(req,res){
+    console.log(req.body);
+    if(req.body.email){
+        let doc = await model.findOne({ email: req.body.email });
+        if(doc){
+            await model.findOneAndUpdate({email: req.body.email}, { email: req.body.email, password: req.body.password, Rank: req.body.Rank });
+            console.log("It got this far");
+
+        }else{
+            var mod = new model(req.body);
+            mod.save();
+            
+        }
+    }
+
+});
+
+app.post("/api/deleteUser", async function(req, res){
+    console.log(req.body);
+    model.findOneAndDelete({email: req.body.email}, function (err, docs) {
+        if (err){
+            console.log(err)
+        }
+        else{
+            console.log("Deleted User : ", docs);
+        }
+        });
+})
+
+app.get("/api/getusers", function(req, res){
+
+    model.find().then(data => {
+        res.send(data);
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 let ksu = {username : 'k@s', pwd: '1', userid: '1', userbirthdate: '1900', userage: '122', groups: ["groupa"], adminstatus: "yes", GroupAssis: ["groupa", "groupb", "groupc"], channels: ["channel1"]};
 let Ntl = {username : 'n@t', pwd: '2', userid: '2' , userbirthdate: '', userage: '', groups: ["groupa"], adminstatus: "no", GroupAssis: ["groupa"], channels: ["channel1"]};

@@ -4,13 +4,11 @@
 
 
 
-<h1 style="color:gainsboro;"> Hello Account User!</h1>
+<!-- <h1 style="color:gainsboro;"> Hello Account User!</h1> -->
 
 
-<!-- 
-<img src="assets/small.jpg" alt="Bird"> -->
 
-<p style="text-align:center; margin-top: -20px;">Username: {{sessionStorage.getItem('username')}}</p>
+<!-- <p style="text-align:center; margin-top: -20px;">Username: {{sessionStorage.getItem('username')}}</p>
 <p style="text-align:center;">userid: {{sessionStorage.getItem('userid')}}</p>
 <p style="text-align:center;">Birthdate: {{sessionStorage.getItem('userbirthdate')}}</p>
 <p style="text-align:center;">Age: {{sessionStorage.getItem('userage')}}</p>
@@ -39,9 +37,26 @@
     </form>
 
 
-    <!-- <h1>hello{{user}}</h1>
-    <h1>{{user}}</h1>
-    <h1>{{user}}</h1>
-    <h1>{{user}}</h1> -->
     
-  </div>
+  </div> -->
+
+
+
+  <ul>
+    <li *ngFor="let person of userlist">
+      <p style="color:white;">Email: {{ person.email }}, Password: {{ person.password }}, Rank: {{ person.Rank }}</p>
+    </li>
+   </ul>
+
+   <form>
+    <h2 style="color:white;">Create User: </h2>
+    <label>email</label>
+    <input type="text" name="email" value="" #email><br>
+    <label>password</label>
+    <input type="text" name="password" value="" #password><br>
+    <label>Rank</label>   
+    <input type="text" name="Rank" value="" #Rank><br>
+    <button type="button" (click)="CreateUser(email.value, password.value, Rank.value)">Submit</button>  <button type="button" (click)="DeleteUser(email.value)">Delete</button>  
+   </form>
+
+   <!-- From with drop down to select user and delete button-->

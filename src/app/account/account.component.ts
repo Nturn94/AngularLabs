@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { UserService } from '../user.service';
 
 
 
@@ -19,6 +22,13 @@ export class AccountComponent implements OnInit {
   birth:String|null  = sessionStorage.getItem('userbirthdate');
   age:String|null  = sessionStorage.getItem('userage');
 
+  userlist: any = [];
+  data: any = "";
+
+  email:String|null = "";
+  password:String|null = "";
+  Rank:String|null = "";
+
   clickme(username:string, id:string, date:string, age:string){
     sessionStorage.setItem('username', username);
     sessionStorage.setItem('userid', id);
@@ -35,7 +45,8 @@ export class AccountComponent implements OnInit {
 
   }
 
-  constructor(private router: Router) {
+
+  constructor(private router: Router, private http: HttpClient, private userS: UserService) {
 
     
    }
@@ -44,13 +55,28 @@ export class AccountComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.userS.getData().subscribe(data => {
+      this.userlist = data; 
+      console.log(this.userlist);
+    });
+
+    
 
 
 
+}
 
+CreateUser(email:string, password:string, Rank:string){
+  this.userS.CreateUser(email, password, Rank).subscribe(data => {
+    console.log(this.data);
+    window.location.reload();
+});
+}
 
-
-
- 
-  }
+DeleteUser(email:string){
+  this.userS.DeleteUser(email).subscribe(data => {
+    console.log(this.data);
+    window.location.reload();
+});
+}
 }
