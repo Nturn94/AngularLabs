@@ -69,6 +69,7 @@ export class AccountComponent implements OnInit {
 CreateUser(email:string, password:string, Rank:string){
   this.userS.CreateUser(email, password, Rank).subscribe(data => {
     console.log(this.data);
+    this.userlist = data; 
     window.location.reload();
 });
 }
@@ -76,6 +77,7 @@ CreateUser(email:string, password:string, Rank:string){
 DeleteUser(email:string){
   this.userS.DeleteUser(email).subscribe(data => {
     console.log(this.data);
+    this.userlist = data; 
     window.location.reload();
 });
 }

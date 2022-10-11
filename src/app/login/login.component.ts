@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
+import { Users } from '../models/users';
+import { LoginService } from '../login.service';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type' : 'application/json'})
@@ -10,10 +12,15 @@ const httpOptions = {
 
 
 
+
 import { Router } from '@angular/router';
+import { User } from '../auth/user';
+import { Observable } from 'rxjs';
 
-const BACKEND_URL = "http://localhost:3000";
-
+// interface result {
+//   status?: string;
+//   data?: any;
+// }
 
 
 @Component({
@@ -24,55 +31,32 @@ const BACKEND_URL = "http://localhost:3000";
 export class LoginComponent implements OnInit {
 
 
-  profileForm = new FormGroup({
-    username: new FormControl(''),
-    userid: new FormControl(''),
-    pwd: new FormControl(''),
-    userbirthdate: new FormControl(''),
-    userage: new FormControl(''),
-  });
+  public user: Users;
+  
 
-
-  userpwd = {username : 'k.su@griffith.edu.au', pwd: '666666'};
-  userobj = {userid: 1, username: this.userpwd.username, userbirthdate: null, userage: 100};
-  data = [];
-
-
-  constructor(private authService: AuthService, private router:Router, private http: HttpClient) {   }
+  constructor(private loginService: LoginService, private router:Router, private http: HttpClient) { 
+    this.user = new Users();
+    }
   ngOnInit(): void {}
 
-  errormes = "";
+  validateLogin() {
+    if(this.user.email && this.user.password) {
+      this.loginService.validateLogin(this.user).subscribe(result => {
+        
+        if((result as any).status === 'success') {
+          this.router.navigate(['/account']);
+        } else {
+          alert('Wrong username password');
+          console.log(result);
+        }
+      }, error => {
+        console.log('error is ', error);
+      });
+    } else {
+        alert('enter user name and password');
+    }
 
-  callServer() {
-    const headers = new HttpHeaders()
-          .set('Authorization', 'my-auth-token')
-          .set('Content-Type', 'application/json');
-
-    console.log(this.profileForm.value);
-
-    this.http.post('http://127.0.0.1:3000/ping', JSON.stringify(this.profileForm.value), {
-      headers: headers
-    })
-    .subscribe(data => {
-      console.log("hello", data);
-
-      if (data != false){
-        console.log(typeof(data));
-        const propertyNames = Object.entries(data);
-        sessionStorage.setItem('username',propertyNames[0][1]);
-        sessionStorage.setItem('userid',propertyNames[2][1]);
-        sessionStorage.setItem('userbirthdate',propertyNames[3][1]);
-        sessionStorage.setItem('userage',propertyNames[4][1]);
-        this.router.navigate(['/account']);
-
-        //redirect account page
-      } else if (data === false){
-        console.log("Wrong User/password");
-        this.errormes = "The login is wrong!";
-      }
-    });
   }
-
 }
 
 

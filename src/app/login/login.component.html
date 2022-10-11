@@ -11,8 +11,8 @@
 
    <button type="submit">Here</button>
 </form> -->
-
-<div class="login-box">
+<!-- ###################################################################### -->
+<!-- <div class="login-box">
   <h2 style="color:gainsboro;">Login</h2>
   <form [formGroup]="profileForm" (ngSubmit)="callServer()">
     <div class="user-box">
@@ -26,7 +26,24 @@
     <button type="submit">Login</button>
 
   </form>
+</div> -->
+<div class="login-box">
+<form class="form-signin">
+  <h2 style="color: white;" class="form-signin-heading">Please sign in</h2>
+  <div class="user-box">
+  <label for="inputEmail" class="sr-only">Email address</label>
+     <input name="email" [(ngModel)] = "user.email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+    </div>
+    <div class="user-box">
+     <label for="inputPassword" class="sr-only">Password</label>
+     <input name="password" [(ngModel)] = "user.password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+    </div>
+     <div class="checkbox">
+       <label>
+         <input type="checkbox" value="remember-me"> Remember me
+       </label>
+     </div>
+ <button class="btn btn-lg btn-primary btn-block" (click)="validateLogin();" type="button">Sign in</button>
+</form>
 </div>
-
-
 

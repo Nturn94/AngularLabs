@@ -1,7 +1,13 @@
 export class Users {
-    id?: any;
-    email?: string;
-    password?: string;
-    Rank?: string;
+    constructor(){
+        this.email= '';
+        this.password = '';
+    }
+    public id?: any;
+    public email?: string;
+    public password?: string;
+    public Rank?: string;
+    public GroupModerator?: Array<Number>;
 
 }
+
