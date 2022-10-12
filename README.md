@@ -10,6 +10,8 @@ server.js
 socket.js
 listen.js
 These files are run via "node server.js". This server file contains all the routes used and runs via express. The listen and socket files are responsible for managaging sockets.
+### Tests
+There are a few tests done on the server.js file. The test file can be found in the server directory. The tests were performed with mocha and chai.
 ### Other files
 All the other files have been created via angular. This is an angular project. There are several generated components and services.
 ### Version control
