@@ -16,35 +16,31 @@ All the other files have been created via angular. This is an angular project. T
 The project has had many updates. The project was commited to often to store changes and always have a backup. There is one branch but merging was only required once as there were no addiontally people working on this project.
 
 ### Documentation - Data structures
-There are three main data structures. Users, channels and groups. All of these structures will exist within the database eventually. At the moment Users is an object, channels and groups are arrays. Currently all structures are stored within the server.js file.
-#### The user has these elements: 
-Username, userid, userbirthdate, userage, groups(memberof)[], adminstatus(yes/no), GroupAssis[], channels[] 
-There is a many groups/channels association to one user. The user can also be a super admin.
-#### The group structure is an array
-There is just an array that inculdes all groups. The relation to the user is stored on user.
-#### The channel structure is also an array
-There is just an array that inculdes all channels. The relation to the user is stored on user. This needs to be made into an object that also stores group ID.
+There are three main data structures. Users, channels and groups. All of these structures exist within the Mongo database.
+| Structure      | Type | Properties |
+| ----------- | ----------- | ----------- |
+| Users      | Object      | _id, email, password, Rank, Moderatorof, groupmemberof, channelmemberof       |
+| Channels   | Object        | _id, channelname, GroupName        |
+| Groups   | Object       | _id, GroupName       |
+
+This design is centered around the user. Most of the information is stored on the user via foreign keys. However there is also a foreign key on the channel structure.
+There are many groups and channels to many users.
 
 ### Documentation - REST API
 
-#### GetStatus()
-This api is a get request that has no input. The request returns the users, groups and channels.
-#### AssignUser(usergroup)
-This api assigns a user to a group. The post request takes a group and a user in a combined string. non important data is returned to show it was successful.
-#### PostNewGroup(NameOfGroup)
-This api creates a new group by adding one to the array. The input is a string.  non important data is returned to show it was successful.
-#### PostNewUser(NameOfUserPasswordOfUser)
-This api creates a new user by adding it to an array. it takes a combined string of a username and password. non important data is returned to show it was successful.
-#### DelUser(user)
-this api deletes a user by sending a string and removing a user from object/array. non important data is returned to show it was successful.
-#### delgroup(group)
-A string is taken as a parameter the string is checked against the array of groups and the group is removed. non important data is returned to show it was successful.
-#### AssignUserToChannel(userchannel)
-A combination string is input. The user object is updated to include an additional channel. non important data is returned to show it was successful.
-#### PostNewChannel(NameOfChannel)
-A string is sent via post. A new channel is added to the channel array. non important data is returned to show it was successful.
-#### delChannel(Channel)
-A string is sent via post. the channel array is indexed and the provided channel is removed. non important data is returned to show it was successful.
+| API      | Description | Inputs | Returns
+| ----------- | ----------- | ----------- |
+| /api/SaveUser     | This creates or updates a user      |   String containing: email, password, rank    | returns user object |
+| /api/deleteUser   | This deletes a user        |    String containing email  | returns user object |
+| /api/SaveGroup   | This creates or updates a group       |    string containing group name    | returns group array |
+| /api/deleteGroup   | This deletes a group       |   string containing group name     | returns group array |
+| /api/SaveChannel   | This creates or updates a channel       |  string containing channel name and group name      | returns channel array |
+| /api/deleteChannel   | This deletes a channel       |   string containing channel name     | returns channel array |
+| /rtv               | Short for retrieve, this api is a get request that returns lists of users, groups and channels       |   No inputs    | Returns arrays of all structures with names as values |
+| /assign          | This api adds a user to a group       |   String of user + group    | Nothing |
+| /assignchannel   | This api adds a user to a channel      |  String of user + channel     | Nothing |
+| //api/getusers   | This api returns an object of all users       |    no inputs   | Object containing all users |
+
 
 ## Documentation - AngularArchitecture
 ### The core files were generated via the "Ng new" command.
@@ -55,14 +51,22 @@ There are several components of note.
 The main file is app. App is responsible for all the inheritance that happens on all the other files. It also includes all of the CSS which was inspired by some online designs.
 ##### Login
 The Login component provides a view and a typescript file that users can use to login. The login TS file references the Auth service.
-##### Auth
-The auth component is a service that checks if a user exists of the server using a http module.
+
 ##### Chat
 The chat component is an early example of what connecting to channels to chat in will look like.
 The chat has some HTML, connection to the sockets and some CSS.
 ##### MSP 
 The msp component is a control panel for managing all aspects of the website. The MSP component has both a html file and a typescript file that can create new users,groups and channels. It can also delete and appoint users.
 There is a large chunck of html written. Many forms have been included.
+##### Account
+Admin page for looking at statistics of users.
+#### The services
+##### LoginService
+The login service checks if a user exists of the server using a http module.
+##### User Service
+Hardly used. More http requests that are called in components.
+##### Socket Service
+contains socket.io code that is used to communicate with the server code.
 
 
 
