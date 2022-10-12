@@ -2,7 +2,11 @@ var express = require('express');
 var app = express();
 // var bodyParser = require("body-parser");
 var mongo = require("mongoose");
-
+// const bp = require('body-parser')
+// app.use(bp.json())
+// app.use(bp.urlencoded({ extended: true }))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); 
 
 var cors = require('cors');
 
@@ -38,19 +42,26 @@ var UsersSchema = new Schema({
     email: {type: String, required: true},
     password: {type: String, required: true},
     Rank: {type: String, required: true},
-    Moderator: {type: Array},
+    Moderator: [{
+        type: String
+    }],
+    groupmember: [{
+        type: String
+    }],
+    channelmember: [{
+        type: String
+    }],
 },{versionKey: false});
 
 var Schema = mongo.Schema;
 var ChannelsSchema = new Schema({
     channelname: {type: String, required: true},
-    GroupID: {type: Number, required: true},
+    GroupName: {type: String, required: true},
 },{versionKey: false});
 
 var Schema = mongo.Schema;
 var GroupsSchema = new Schema({
     GroupName: {type: String, required: true},
-    GroupID: {type: Number, required: true},
 },{versionKey: false});
     
 var model = mongo.model('users', UsersSchema, 'users');
@@ -73,16 +84,28 @@ app.all("/*", function(req, res, next){
   });
 
 app.post("/api/SaveUser", async function(req,res){
-    if(req.body.email){
-        let doc = await model.findOne({ email: req.body.email });
+
+    const buffers = [];
+    for await (const chunk of req) {
+      buffers.push(chunk);
+    }
+    const myarray = Buffer.concat(buffers).toString();
+    
+    someText = myarray.replace(/(\r\n|\n|\r|"|{|})/gm, "").trim();
+    const data = someText.split(" ");
+    // res.send(data);
+
+    // res.status(200).send(myarray);
+    if(data){
+        let doc = await model.findOne({ email: data[0] });
         if(doc){
-            await model.findOneAndUpdate({email: req.body.email}, { email: req.body.email, password: req.body.password, Rank: req.body.Rank });
+            await model.findOneAndUpdate({email: data[0]}, { email: data[0], password: data[1], Rank: data[2] });
             model.find().then(data => {
                 res.send(data);
             });
         }else{
 
-            var mod = new model(req.body);
+            var mod = new model( {email: data[0], password: data[1], Rank: data[2]});
              mod.save((err, mod) =>{
                 if(err) {
                     res.send(err);
@@ -101,16 +124,26 @@ app.post("/api/SaveUser", async function(req,res){
 
 
 app.post("/api/deleteUser", async function(req, res){
-    model.findOneAndDelete({email: req.body.email}, function (err, docs) {
-        if (err){
-            console.log(err)
-        }
-        else{
-            model.find().then(data => {
-                res.send(data);
-            });
-        }
+
+    const buffers = [];
+    for await (const chunk of req) {
+      buffers.push(chunk);
+    }
+    const myarray = (Buffer.concat(buffers).toString());
+    someText = myarray.replace(/(\r\n|\n|\r|"|{|}|\\)/gm, "").trim();
+    console.log(someText);
+
+    const doc = model.findOne({ email: someText }, function(err,obj) { console.log(obj); });
+    if(doc){
+        model.findOneAndRemove({ email: someText }, function (err) {
+            if(err) console.log(err);
+            console.log("Successful deletion");
+          });
+    
+        await model.find().then(data => {
+            res.send(data);
         });
+    }
 })
 
 app.get("/api/getusers", function(req, res){
@@ -125,16 +158,32 @@ app.get("/api/getusers", function(req, res){
 
 
 app.post("/api/SaveGroup", async function(req,res){
-    if(req.body.GroupName){
-        let doc = await groupmodel.findOne({ GroupName: req.body.GroupName });
+
+    const buffers = [];
+    // const grouparray = [];
+    for await (const chunk of req) {
+      buffers.push(chunk);
+    }
+    const myarray = Buffer.concat(buffers).toString();
+    data = myarray.replace(/(\r\n|\n|\r|"|{|}|\\)/gm, "").trim();
+
+    // console.log(data);
+    // res.send(data);
+    const grouparray = [];
+
+    if(data){
+        let doc = await groupmodel.findOne({ GroupName: data });
         if(doc){
-            await groupmodel.findOneAndUpdate({GroupName: req.body.GroupName}, { GroupName: req.body.GroupName, GroupID: req.body.GroupID});
+            await groupmodel.findOneAndUpdate({GroupName: data}, { GroupName: data});
             groupmodel.find().then(data => {
-                res.send(data);
+                for(var i = 0; i < data.length; i++) {
+                    grouparray.push(data[i].GroupName);
+                  }
+                res.status(200).send(grouparray);
             });
         }else{
 
-            var mod = new groupmodel(req.body);
+            var mod = new groupmodel({GroupName: data});
              mod.save((err, mod) =>{
                 if(err) {
                     res.send(err);
@@ -142,8 +191,12 @@ app.post("/api/SaveGroup", async function(req,res){
                 else {
                 }
             });
+            
             groupmodel.find().then(data => {
-                res.status(200).send(data);
+                for(var i = 0; i < data.length; i++) {
+                    grouparray.push(data[i].GroupName);
+                  }
+                res.status(200).send(grouparray);
             });
             
         }
@@ -151,7 +204,15 @@ app.post("/api/SaveGroup", async function(req,res){
 
 });
 app.post("/api/deleteGroup", async function(req, res){
-    groupmodel.findOneAndDelete({GroupName: req.body.GroupName}, function (err, docs) {
+
+    const buffers = [];
+    for await (const chunk of req) {
+      buffers.push(chunk);
+    }
+    const myarray = (Buffer.concat(buffers).toString());
+    someText = myarray.replace(/(\r\n|\n|\r|"|{|}|\\)/gm, "").trim();
+    console.log(someText);
+    groupmodel.findOneAndDelete({GroupName: someText}, function (err, docs) {
         if (err){
             console.log(err)
         }
@@ -161,7 +222,7 @@ app.post("/api/deleteGroup", async function(req, res){
             });
         }
         });
-})
+});
 
 app.get("/api/getGroup", function(req, res){
 
@@ -173,16 +234,32 @@ app.get("/api/getGroup", function(req, res){
 // #####################################################################
 
 app.post("/api/SaveChannel", async function(req,res){
-    if(req.body.GroupName){
-        let doc = await channelmodel.findOne({ channelname: req.body.channelname });
+    const buffers = [];
+    // const grouparray = [];
+    for await (const chunk of req) {
+      buffers.push(chunk);
+    }
+    const myarray = Buffer.concat(buffers).toString();
+    someText = myarray.replace(/(\r\n|\n|\r|"|{|}|\\)/gm, "").trim();
+    const data = someText.split(" ");
+
+    // console.log(data);
+    // res.send(data);
+    const channelarray = [];
+
+    if(data){
+        let doc = await channelmodel.findOne({ channelname: data });
         if(doc){
-            await channelmodel.findOneAndUpdate({channelname: req.body.channelname}, { GroupName: req.body.channelname, GroupID: req.body.GroupID});
+            await channelmodel.findOneAndUpdate({channelname: data}, { channelname: data[0], GroupName: data[1]});
             channelmodel.find().then(data => {
-                res.send(data);
+                for(var i = 0; i < data.length; i++) {
+                    grouparray.push(data[i].GroupName);
+                  }
+                res.status(200).send(grouparray);
             });
         }else{
 
-            var mod = new channelmodel(req.body);
+            var mod = new channelmodel({channelname: data, GroupName: data[1]});
              mod.save((err, mod) =>{
                 if(err) {
                     res.send(err);
@@ -190,8 +267,12 @@ app.post("/api/SaveChannel", async function(req,res){
                 else {
                 }
             });
+            
             channelmodel.find().then(data => {
-                res.status(200).send(data);
+                for(var i = 0; i < data.length; i++) {
+                    channelarray.push(data[i].channelname);
+                  }
+                res.status(200).send(channelarray);
             });
             
         }
@@ -199,17 +280,25 @@ app.post("/api/SaveChannel", async function(req,res){
 
 });
 app.post("/api/deleteChannel", async function(req, res){
-    channelmodel.findOneAndDelete({email: req.body.GroupName}, function (err, docs) {
-        if (err){
-            console.log(err)
+
+        const buffers = [];
+        for await (const chunk of req) {
+          buffers.push(chunk);
         }
-        else{
-            channelmodel.find().then(data => {
-                res.send(data);
+        const myarray = (Buffer.concat(buffers).toString());
+        someText = myarray.replace(/(\r\n|\n|\r|"|{|}|\\)/gm, "").trim();
+        console.log(someText);
+        channelmodel.findOneAndDelete({channelname: someText}, function (err, docs) {
+            if (err){
+                console.log(err)
+            }
+            else{
+                channelmodel.find().then(data => {
+                    res.send(data);
+                });
+            }
             });
-        }
-        });
-})
+});
 
 app.get("/api/getChannel", function(req, res){
 
@@ -232,8 +321,75 @@ app.post('/api/user/login', async (req, res) => {
             message: 'Login Failed'
         })
     }
-})
+});
 
+
+app.get("/rtv", async function (req, res) {
+    const userarray = [];
+    const grouparray = [];
+    const channelarray = [];
+    users = await model.find();
+    for(var i = 0; i < users.length; i++) {
+        userarray.push(users[i].email);
+      }
+    channels = await channelmodel.find();
+    for(var i = 0; i < channels.length; i++) {
+        channelarray.push(channels[i].channelname);
+      }
+    groups = await groupmodel.find();
+    for(var i = 0; i < groups.length; i++) {
+        grouparray.push(groups[i].GroupName);
+      }
+    res.status(200).json({groups: grouparray, users: userarray, channels: channelarray});
+});
+
+
+app.post('/assign', async (req, res) =>{
+    const buffers = [];
+    for await (const chunk of req) {
+      buffers.push(chunk);
+    }
+    const myarray = (Buffer.concat(buffers).toString());
+    someText = myarray.replace(/(\r\n|\n|\r|"|{|}|\\)/gm, "").trim();
+    console.log(someText);
+    const myArray = someText.split(" ");
+
+
+    let result = await model.findOne({ email: myArray[0] });
+
+    if( result.groupmember){
+        await model.findOneAndUpdate( {email: myArray[0]},
+            {$push: {groupmember: myArray[1] }});
+
+    }else{
+        await model.findOneAndUpdate({email: myArray[0]}, {$push: {groupmember: myArray[1] }});
+
+    }
+
+});
+app.post('/assignchannel', async (req, res) =>{
+    const buffers = [];
+    for await (const chunk of req) {
+      buffers.push(chunk);
+    }
+    const myarray = (Buffer.concat(buffers).toString());
+    someText = myarray.replace(/(\r\n|\n|\r|"|{|}|\\)/gm, "").trim();
+    console.log(someText);
+    const myArray = someText.split(" ");
+
+    let result = await model.findOne({ email: myArray[0] });
+
+    if( result.channelmember){
+        await model.findOneAndUpdate( {email: myArray[0]},
+            {$push: {channelmember: myArray[1] }});
+
+    }else{
+        await model.findOneAndUpdate({email: myArray[0]}, {$push: {channelmember: myArray[1] }});
+
+    }
+
+
+});
 
 app.get("/", function (req, res) {
     res.sendFile(__dirname + "../dist/week4/");

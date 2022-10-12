@@ -37,6 +37,8 @@ export class MSPComponent implements OnInit {
   newchannelname:string="";
   channels:any =[];
   delchannelsel:string="";
+  groupname: String="";
+  newuserrank: String="";
   
   isdiv1 = false;
   isdiv2 = false;
@@ -46,16 +48,19 @@ export class MSPComponent implements OnInit {
     this.isdiv2 = false;
     this.isdiv3 = false;
     this.isdiv1 = true;
+    this.isdiv4 = false;
   } 
   togglediv2(){
     this.isdiv2 = true;
     this.isdiv3 = false;
     this.isdiv1 = false;
+    this.isdiv4 = false;
   } 
   togglediv3(){
     this.isdiv2 = false;
     this.isdiv3 = true;
     this.isdiv1 = false;
+    this.isdiv4 = false;
   } 
   togglediv4(){
     this.isdiv2 = false;
@@ -89,13 +94,12 @@ private error (error: any) {
 
     this.getStatus()
     .then((result: any) => {
-      // this.status = result.status;
-      console.log(result.users, result.groups);
+
+      // console.log(result.users, result.groups);
       
       
-      for (let i = 0; i < result.users.length; i++) {
-        this.tempuser.push(result.users[i].username)
-      }
+
+      this.tempuser = result.users;
       this.groups = result.groups;
       this.users = this.tempuser;
       this.channels= result.channels;
@@ -133,9 +137,10 @@ PostNewGroup(){
 
   console.log("New room name is:", this.newroomname);
 
-  return this.http.post('http://127.0.0.1:3000/newgroup', JSON.stringify(this.newroomname), {
+  return this.http.post('http://127.0.0.1:3000/api/SaveGroup', JSON.stringify(this.newroomname), {
   headers: headers
 })    .subscribe(data => {
+  this.groups = data;
   console.log(data);
 });
 
@@ -147,9 +152,9 @@ PostNewUser(){
 
 
   console.log("New user name is:", this.newusername+this.newuserpwd);
-  var newuser = this.newusername+this.newuserpwd;
+  var newuser = this.newusername+this.newuserpwd+this.newuserrank;
 
-  return this.http.post('http://127.0.0.1:3000/newuser', JSON.stringify(newuser), {
+  return this.http.post('http://127.0.0.1:3000/api/SaveUser', JSON.stringify(newuser), {
   headers: headers
 })    .subscribe(data => {
   console.log(data);
@@ -164,7 +169,7 @@ DelUser(){
 
   console.log("This user is deleted", this.delusersel);
 
-  return this.http.post('http://127.0.0.1:3000/deluser', JSON.stringify(this.delusersel), {
+  return this.http.post('http://127.0.0.1:3000/api/deleteUser', JSON.stringify(this.delusersel), {
   headers: headers
 })    .subscribe(data => {
   console.log(data);
@@ -180,7 +185,7 @@ delgroup(){
 
   console.log("This group is deleted", this.delgroupsel);
 
-  return this.http.post('http://127.0.0.1:3000/delgroup', JSON.stringify(this.delgroupsel), {
+  return this.http.post('http://127.0.0.1:3000/api/deleteGroup', JSON.stringify(this.delgroupsel), {
   headers: headers
 })    .subscribe(data => {
   console.log(data);
@@ -211,7 +216,7 @@ PostNewChannel(){
 
   console.log("New channel name is:", this.newchannelname);
 
-  return this.http.post('http://127.0.0.1:3000/newchannel', JSON.stringify(this.newchannelname), {
+  return this.http.post('http://127.0.0.1:3000/api/SaveChannel', JSON.stringify(this.newchannelname), {
   headers: headers
 })    .subscribe(data => {
   console.log(data);
@@ -226,7 +231,7 @@ delChannel(){
 
   console.log("This channel is deleted", this.delchannelsel);
 
-  return this.http.post('http://127.0.0.1:3000/delchannel', JSON.stringify(this.delchannelsel), {
+  return this.http.post('http://127.0.0.1:3000/api/deleteChannel', JSON.stringify(this.delchannelsel), {
   headers: headers
 })    .subscribe(data => {
   console.log(data);

@@ -49,7 +49,8 @@
     <h2 style="color:white;">Create User</h2><br> 
     <form id="form3">
         <span style="color: white;">Username:  </span><input type="text" [(ngModel)] = "newusername" name="newusername" value=""><br>
-        <span style="color: white;">Password: </span><input type="text" [(ngModel)] = "newuserpwd" name="newuserpwd" value=""><br><br>
+        <span style="color: white;">Password: </span><input type="text" [(ngModel)] = "newuserpwd" name="newuserpwd" value=""><br>
+        <span style="color: white;">Rank: </span><input type="text" [(ngModel)] = "newuserrank" name="newuserrank" value=""><br><br>
         <button (click)="PostNewUser()" class ="btn btn-primary"> Create User</button>
     </form>
 
@@ -80,7 +81,8 @@
     </form>
     <h2 style="color:white;">Create new Channel</h2><br>
     <form id="form2">
-        <input type="text" [(ngModel)] = "newchannelname" name="newchannelname" value=""><br><br>
+        <input type="text" [(ngModel)] = "newchannelname" name="newchannelname" value="">
+        <input type="text" [(ngModel)] = "groupname" name="groupname" value=""><br><br>
         <button (click)="PostNewChannel()" class ="btn btn-primary"> Create channel</button>
     </form>
     <h3  style="color:white;">Delete Channel</h3>

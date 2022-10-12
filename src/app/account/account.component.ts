@@ -28,6 +28,7 @@ export class AccountComponent implements OnInit {
   email:String|null = "";
   password:String|null = "";
   Rank:String|null = "";
+  groupmember:Array<String> = [];
 
   clickme(username:string, id:string, date:string, age:string){
     sessionStorage.setItem('username', username);
