@@ -28,7 +28,7 @@ There are many groups and channels to many users.
 
 ### Documentation - REST API
 
-| API      | Description | Inputs | Returns
+| API      | Description | Inputs | Returns |
 | ----------- | ----------- | ----------- | | ----------- |
 | /api/SaveUser     | This creates or updates a user      |   String containing: email, password, rank    | returns user object |
 | /api/deleteUser   | This deletes a user        |    String containing email  | returns user object |
